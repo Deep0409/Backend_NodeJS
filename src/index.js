@@ -1,6 +1,28 @@
-const express=require("express");
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./db/index.js";
 const app=express();
-require("dotenv").config();
+
+dotenv.config({
+    path:"./env"
+})
+// ;(async()=>{
+//     try {
+//        await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`);
+//        app.on("error",(error)=>{console.log("error to connect with express  "+error);
+//        throw error;});
+
+//        app.listen(process.env.PORT,()=>{
+//         console.log(`server started on ${process.env.PORT}`);
+//     });
+       
+//     } catch (error) {
+//         console.log("Error h database connection me bhai.   "+ error);
+//         throw error;
+//     }
+// })();
+
+connectDB();
 
 
 app.get("/",(req,res)=>{
@@ -8,6 +30,3 @@ app.get("/",(req,res)=>{
     res.send("Hello from server");
 })
 
-app.listen(process.env.PORT,()=>{
-    console.log(`server started on ${process.env.PORT}`);
-})
