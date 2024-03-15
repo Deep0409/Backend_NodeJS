@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
-import app from "./app.js"
+import {app} from "./app.js"
 
 dotenv.config({
     path:"./env"
@@ -30,11 +30,6 @@ connectDB()
     })
 })
 .catch((error)=>{
-    console.log("mongoDb connection m error Hai");
-})
-
-app.get("/",(req,res)=>{
-  
-    res.send("Hello from server");
+    console.log("mongoDb connection m error Hai  "+ error);
 })
 
