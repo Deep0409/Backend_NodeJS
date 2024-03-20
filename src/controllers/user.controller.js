@@ -5,6 +5,26 @@ import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 
+const generateAccessAndRefreshTokens=async(userId)=>{
+    try {
+        //check if userId exists
+        const user=await User.findById(userId);
+
+        //create the access and refresh tokens 
+        const accessToken =user.generateAccessToken();
+        const refreshToken=user.generateRefreshToken();
+
+        //save the refresh token in the db and as we don't have password thus turning off validation of mongodb;
+        user.refreshToken=refreshToken;
+        user.save({validateBeforeSave:false});
+
+        //return the access and refresh token
+        return {accessToken,refreshToken};
+    } catch (error) {
+        throw new ApiError(500,"something went wrong while genrating access and refresh tokens.")
+    }
+}
+
 
 const registerUser=asyncHandler(async(req,res)=>{
 
@@ -34,11 +54,15 @@ const registerUser=asyncHandler(async(req,res)=>{
     //check for images and avatar
 
     const avatarLocalPath=req.files?.avatar[0]?.path;
-    const coverImageLocalPath=req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath=req.files?.coverImage[0]?.path;
     console.log(req.files);
 
     if(!avatarLocalPath){
         throw new ApiError(400,"Avatar field is required.");
+    }
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage)&& req.files.coverImage.length>0){
+        coverImageLocalPath=req.files.coverImage[0].path;
     }
 
 
@@ -75,6 +99,45 @@ const registerUser=asyncHandler(async(req,res)=>{
      return res.status(201).json(
         new ApiResponse(200,createdUser,"User Registered Successfully")
      )
-})
+});
 
-export {registerUser};
+
+const loginUser=asyncHandler(async(req,res)=>{
+
+    const {email,username,password}=req.body;
+    
+    if(!username || !email){
+        throw new ApiError(400,"username or email is required");
+    }
+
+    const user =await User.findOne({
+        $or:[{username},{email}]
+    });
+
+    if(!user){
+        throw new ApiError(404,"User doesn't exist");
+    }
+
+    const isPasswordValid=await user.isPasswordCorrect(password);
+
+    if(!isPasswordValid){
+        throw new ApiError(404,"InValid User Credentials");
+    }
+
+    const {accessToken,refreshToken}= await generateAccessAndRefreshTokens(user._id);
+
+    const loggedInUser=await User.findOne(user._id).select("-password -refreshToken");
+
+    const options={
+        httpOnly:true,
+        secure:true,
+    }
+    return res.status(400).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options).json({
+
+    })
+});
+
+export {
+    registerUser,
+    loginUser,
+};
