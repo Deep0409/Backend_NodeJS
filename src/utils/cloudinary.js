@@ -12,12 +12,13 @@ cloudinary.config({
 const uploadOnCloudinary=async(filePath)=>{
     try {
         if(!filePath) return null;
-
-       const response=await cloudinary.uploader.upload(filePath,
-        { resource_type:"auto" });
+        console.log(filePath + "yha h path bhai.");
+        const response = await cloudinary.uploader.upload(filePath, {
+            resource_type: "auto"
+        })
         console.log("uploaded to cloudinary.  "+response.json());
 
-        fs.unlinkSync(filePath);
+        //fs.unlinkSync(filePath);
         return response;
 
 
