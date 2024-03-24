@@ -299,7 +299,7 @@ const updateUserAvatar=asyncHandler(async(req,res)=>{
             $set:{
                 avatar:avatar.url
             },
-
+//by setting new:true we will get the updatd new user
         },{new:true}).select("-password");
 
         return res.status(200).json(new ApiResponse(200,user,"Avatar updated Successfully."))
