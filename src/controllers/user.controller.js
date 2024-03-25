@@ -275,7 +275,7 @@ const updateUserCoverImage=asyncHandler(async(req,res)=>{
                coverImage:coverImage.url
             },
 
-        },{new:true}).select("-password");
+        },{new:true}).select("-password");//by setting new:true we will get the updatd new user
 
         return res.status(200).json(new ApiResponse(200,user,"Cover Image updated Successfully."))
 
