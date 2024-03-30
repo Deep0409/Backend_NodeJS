@@ -306,6 +306,7 @@ const updateUserAvatar=asyncHandler(async(req,res)=>{
 
 });
 
+//used for channel profile
 const getUserChannelProfile=asyncHandler(async(req,res)=>{
     const username=req.params;
 
@@ -370,8 +371,16 @@ const getUserChannelProfile=asyncHandler(async(req,res)=>{
     ]);
 
 
+    if(!channel?.length){
+        throw new ApiError(404,"channel does not exist.")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200,channel[0],"User channel fetched successfully.")
+    )
 
 });
+
 export {
     registerUser,
     loginUser,
