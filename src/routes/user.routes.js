@@ -25,6 +25,8 @@ router.route("/register").post(
     ]),
     registerUser);
 
+    //routes modified
+    
 router.route("/login").post(loginUser);
 router.route("/logout").post(verifyJWT,logout);
 router.route("/refresh-token").post(refreshAccessToken);
