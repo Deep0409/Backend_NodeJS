@@ -437,7 +437,7 @@ const getWatchHistory = asyncHandler(async(req, res) => {
     )
 })
 
-
+//exporting all the controllers
 export {
     registerUser,
     loginUser,
