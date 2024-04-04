@@ -18,7 +18,7 @@ const generateAccessAndRefreshTokens=async(userId)=>{
         user.refreshToken=refreshToken;
         user.save({validateBeforeSave:false});
 
-        //return the access and refresh token
+        //return the access and refresh tokens
         return {accessToken,refreshToken};
     } catch (error) {
         throw new ApiError(500,"something went wrong while genrating access and refresh tokens.")
@@ -436,7 +436,7 @@ const getWatchHistory = asyncHandler(async(req, res) => {
             "Watch history fetched successfully"
         )
     )
-})
+});
 
 //exporting all the controllers
 export {
