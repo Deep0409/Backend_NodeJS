@@ -25,7 +25,7 @@ const generateAccessAndRefreshTokens=async(userId)=>{
     }
 }
 
-
+//register user controller
 const registerUser=asyncHandler(async(req,res)=>{
 
     //get user details from frontend
